@@ -1,23 +1,4 @@
 import 'package:flutter/material.dart';
+import 'package:wordle_clone_app/app/app.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wordle Clone App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Main Screen'),
-        ),
-      ),
-    );
-  }
-}
+void main() => runApp(const App());
