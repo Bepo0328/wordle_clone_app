@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:wordle_clone_app/app/app_colors.dart';
 import 'package:wordle_clone_app/wordle/data/word_list.dart';
 import 'package:wordle_clone_app/wordle/wordle.dart';
 
@@ -100,6 +101,74 @@ class _WordleScreenState extends State<WordleScreen> {
           }
         });
       }
+
+      _checkIfWinOrLoss();
     }
+  }
+
+  void _checkIfWinOrLoss() {
+    if (_currentWord!.wordString == _solution.wordString) {
+      _gameStatus = GameStatus.won;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          dismissDirection: DismissDirection.none,
+          duration: const Duration(days: 1),
+          backgroundColor: correctColor,
+          content: const Text(
+            'You won!',
+            style: TextStyle(color: Colors.white),
+          ),
+          action: SnackBarAction(
+            onPressed: _restart,
+            textColor: Colors.white,
+            label: 'New Game',
+          ),
+        ),
+      );
+    } else if (_currentWordIndex + 1 >= _board.length) {
+      _gameStatus = GameStatus.lost;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          dismissDirection: DismissDirection.none,
+          duration: const Duration(days: 1),
+          backgroundColor: Colors.redAccent[200],
+          content: Text(
+            'You lost! SOlution: ${_solution.wordString}',
+            style: const TextStyle(color: Colors.white),
+          ),
+          action: SnackBarAction(
+            onPressed: _restart,
+            textColor: Colors.white,
+            label: 'New Game',
+          ),
+        ),
+      );
+    } else {
+      _gameStatus = GameStatus.playing;
+    }
+    _currentWordIndex += 1;
+  }
+
+  void _restart() {
+    setState(() {
+      _gameStatus = GameStatus.playing;
+      _currentWordIndex = 0;
+      _board
+        ..clear()
+        ..addAll(
+          List.generate(
+            6,
+            (_) => Word(
+              letters: List.generate(
+                5,
+                (_) => Letter.empty(),
+              ),
+            ),
+          ),
+        );
+      _solution = Word.fromString(
+        fiveLetterWords[Random().nextInt(fiveLetterWords.length)].toUpperCase(),
+      );
+    });
   }
 }
