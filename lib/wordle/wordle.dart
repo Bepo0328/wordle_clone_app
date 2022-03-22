@@ -3,4 +3,4 @@ export 'models/word_model.dart';
 export 'views/wordle.screen.dart';
 export 'widgets/board.dart';
 export 'widgets/board_tile.dart';
-// export 'widgets/keyboard.dart';
+export 'widgets/keyboard.dart';
