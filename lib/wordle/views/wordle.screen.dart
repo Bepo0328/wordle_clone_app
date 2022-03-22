@@ -35,6 +35,8 @@ class _WordleScreenState extends State<WordleScreen> {
     fiveLetterWords[Random().nextInt(fiveLetterWords.length)].toUpperCase(),
   );
 
+  final Set<Letter> _keyboardLetters = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +62,7 @@ class _WordleScreenState extends State<WordleScreen> {
             onKeyTapped: _onKeyTapped,
             onDeleteTapped: _onDeleteTapped,
             onEnterTapped: _onEnterTapped,
+            letters: _keyboardLetters,
           ),
         ],
       ),
@@ -100,6 +103,16 @@ class _WordleScreenState extends State<WordleScreen> {
                 currentWordLetter.copyWith(status: LetterStatus.notInWord);
           }
         });
+
+        final letter = _keyboardLetters.firstWhere(
+          (e) => e.val == currentWordLetter.val,
+          orElse: () => Letter.empty(),
+        );
+
+        if (letter.status != LetterStatus.correct) {
+          _keyboardLetters.removeWhere((e) => e.val == currentWordLetter.val);
+          _keyboardLetters.add(_currentWord!.letters[i]);
+        }
       }
 
       _checkIfWinOrLoss();
@@ -133,7 +146,7 @@ class _WordleScreenState extends State<WordleScreen> {
           duration: const Duration(days: 1),
           backgroundColor: Colors.redAccent[200],
           content: Text(
-            'You lost! SOlution: ${_solution.wordString}',
+            'You lost! Solution: ${_solution.wordString}',
             style: const TextStyle(color: Colors.white),
           ),
           action: SnackBarAction(
@@ -169,6 +182,7 @@ class _WordleScreenState extends State<WordleScreen> {
       _solution = Word.fromString(
         fiveLetterWords[Random().nextInt(fiveLetterWords.length)].toUpperCase(),
       );
+      _keyboardLetters.clear();
     });
   }
 }
